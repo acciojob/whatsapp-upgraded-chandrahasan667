@@ -31,7 +31,7 @@ public class WhatsappController {
     }
 
     @PostMapping("/add-group")
-    public Group createGroup(List<User> users){
+    public Group createGroup(List<User> users) throws Exception{
         // The list contains at least 2 users where the first user is the admin. A group has exactly one admin.
         // If there are only 2 users, the group is a personal chat and the group name should be kept as the name of the second user(other than admin)
         // If there are 2+ users, the name of group should be "Group count". For example, the name of first group would be "Group 1", second would be "Group 2" and so on.
@@ -58,7 +58,11 @@ public class WhatsappController {
         //Throw "You are not allowed to send message" if the sender is not a member of the group
         //If the message is sent successfully, return the final number of messages in that group.
 
-        return whatsappService.sendMessage(message, sender, group);
+        try {
+            return whatsappService.sendMessage(message, sender, group);
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
     }
     @PutMapping("/change-admin")
     public String changeAdmin(User approver, User user, Group group) throws Exception{
@@ -78,7 +82,11 @@ public class WhatsappController {
         //If user is not the admin, remove the user from the group, remove all its messages from all the databases, and update relevant attributes accordingly.
         //If user is removed successfully, return (the updated number of users in the group + the updated number of messages in group + the updated number of overall messages)
 
-        return whatsappService.removeUser(user);
+        try {
+            return whatsappService.removeUser(user);
+        }catch (Exception e){
+            throw new Exception(e.getMessage());
+        }
     }
 
     @GetMapping("/find-messages")
